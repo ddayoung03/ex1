@@ -26,7 +26,16 @@
 - INMP441 SD  -> Geekble D2 / GPIO 5
 - INMP441 L/R -> GND (LEFT)
 
-## VS Code / ESP-IDF 5.4.4
+## VS Code / ESP-IDF v6.1
+
+커밋된 `sdkconfig`가 ESP-IDF **v6.1** 기준으로 생성돼 있습니다. 다른 버전(예: 5.4.4)으로 빌드하면 `idf.py`가 sdkconfig를 그 버전에 맞춰 대량으로 재작성하니, **v6.1 툴체인을 그대로 쓰세요**.
+
+Windows에서 eim으로 설치했다면:
+
+```powershell
+eim install -i v6.1 -t esp32s3
+& 'C:\Espressif\tools\Microsoft.v6.1.PowerShell_profile.ps1'
+```
 
 프로젝트 폴더 자체를 VS Code에서 엽니다.
 
@@ -49,6 +58,12 @@ idf.py flash monitor
 ### Component
 
 `main/idf_component.yml`에 `espressif/esp-tflite-micro 1.3.5`를 고정했습니다. 최초 configure/build 때 Component Manager가 내려받습니다. `partitions.csv`는 4MB Flash에서 앱 영역을 3MB로 잡아 TFLite Micro 코드 공간을 확보합니다.
+
+### `main/CMakeLists.txt`의 `esp_driver_gpio`
+
+배터리/버튼 코드가 `driver/gpio.h`를 쓰는데 `REQUIRES`에 빠져 있어서 원래는 빌드가
+`BUG: component_requirements.py: cannot match original component filename for source
+component main` 에러로 실패했습니다. `esp_driver_gpio`를 추가해서 해결했습니다 — 지우지 마세요.
 
 ## PSRAM
 
